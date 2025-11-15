@@ -12,11 +12,13 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private User employer;
+
     private String title;
     private String description;
     private double salary;
     private String location;
-    // TODO: replace with category entity
     private String category;
     private Date deadline;
+    private JobStatus status;
 }
