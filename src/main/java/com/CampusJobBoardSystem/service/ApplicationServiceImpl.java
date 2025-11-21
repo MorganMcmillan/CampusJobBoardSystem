@@ -1,0 +1,46 @@
+package com.CampusJobBoardSystem.service;
+
+import com.CampusJobBoardSystem.exception.InvalidRoleException;
+import com.CampusJobBoardSystem.model.*;
+import com.CampusJobBoardSystem.repository.ApplicationRepository;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
+
+public class ApplicationServiceImpl implements ApplicationService {
+    private final ApplicationRepository applicationRepository;
+
+    public ApplicationServiceImpl(ApplicationRepository applicationRepository) {
+        this.applicationRepository = applicationRepository;
+    }
+
+    @Override
+    public Application create(Job job, User student) {
+        if (student.getRole() != Role.STUDENT)
+            throw new InvalidRoleException("Expected user with role STUDENT, got" + student.getRole() + ".");
+        Application application = new Application(job, student, ApplicationStatus.SUBMITTED, Timestamp.from(Instant.now()));
+        return applicationRepository.save(application);
+    }
+
+    @Override
+    public List<Application> view(User student) {
+        if (student.getRole() != Role.STUDENT)
+            throw new InvalidRoleException("Expected user with role STUDENT, got" + student.getRole() + ".");
+        return applicationRepository.findByUser(student);
+    }
+
+    @Override
+    public List<Application> view(User student, ApplicationStatus status) {
+        if (student.getRole() != Role.STUDENT)
+            throw new InvalidRoleException("Expected user with role STUDENT, got" + student.getRole() + ".");
+        return applicationRepository.findByUserAndStatus(student, status);
+    }
+
+    @Override
+    public List<Application> view(Job job, User employer) {
+        if (employer.getRole() != Role.EMPLOYER)
+            throw new InvalidRoleException("Expected user to have role EMPLOYER, got " + employer.getRole() + ".");
+        return applicationRepository.findByJobAndStatus(job, ApplicationStatus.SUBMITTED);
+    }
+}

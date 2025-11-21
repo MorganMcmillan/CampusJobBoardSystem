@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findByStatus(JobStatus status);
+    List<Job> findByStatusAndCategory(JobStatus status, String category);
     List<Job> findByCategory(String category);
 }
 
