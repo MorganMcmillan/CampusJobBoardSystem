@@ -17,19 +17,17 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> view(User user) {
+    public List<Job> view() {
         return jobRepository.findByStatus(JobStatus.APPROVED);
     }
 
     @Override
-    public List<Job> view(User user, String category) {
+    public List<Job> view(String category) {
         return jobRepository.findByStatusAndCategory(JobStatus.APPROVED, category);
     }
 
     @Override
-    public void create(User employer, Job job) {
-        if (employer.getRole() != Role.EMPLOYER)
-            throw new InvalidRoleException("Expected user to have role EMPLOYER, got " + employer.getRole() + ".");
-        TODO!
+    public void create(Job job) {
+        jobRepository.save(job);
     }
 }

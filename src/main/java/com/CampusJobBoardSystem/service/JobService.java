@@ -7,7 +7,7 @@ import com.CampusJobBoardSystem.model.User;
 import java.util.List;
 
 public interface JobService {
-    public List<Job> view(User user);
-    public List<Job> view(User user, String category);
-    public void create(User employer, Job job);
+    List<Job> view();
+    List<Job> view(String category);
+    void create(Job job);
 }

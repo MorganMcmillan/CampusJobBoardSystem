@@ -7,6 +7,7 @@ import com.CampusJobBoardSystem.model.User;
 import com.CampusJobBoardSystem.model.UserStatus;
 import com.CampusJobBoardSystem.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
@@ -17,24 +18,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(String fullName, String email, Role role) throws UserExistsException {
-        if (userRepository.findByEmail(email).isPresent()) {
-            throw new UserExistsException("User with email " + email + " already exists.");
-        }
-        User user = new User(fullName, email, role, UserStatus.ACTIVE);
-        return userRepository.save(user);
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override
-    public User login(String fullName, String email) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isEmpty())
-            throw new UserNotFoundException("User " + fullName + " with email " + email + " not found.");
+    public User getUserById(long id) {
+        return userRepository.findById(id).orElse(null);
+    }
 
-        User user = userOptional.get();
-        if (!user.getFullName().equals(fullName))
-            throw new UserExistsException("A user with email" + email + " exist, but not for " + fullName);
+    @Override
+    public void createUser(User user) {
+        userRepository.save(user);
+    }
 
-        return user;
+    @Override
+    public void updateUser(long id, User user) {
+        if (!userRepository.existsById(id))
+            throw new UserNotFoundException("User by id " + id + " not found.");
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(long id) {
+        if (!userRepository.existsById(id))
+            throw new UserNotFoundException("User by id " + id + " not found.");
+        userRepository.deleteById(id);
     }
 }
