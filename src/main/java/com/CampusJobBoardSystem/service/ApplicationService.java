@@ -10,4 +10,12 @@ public interface ApplicationService {
     public List<Application> view(User student);
     public List<Application> view(User student, ApplicationStatus status);
     public List<Application> view(Job job, User employer);
+
+    List<Application> getAllApplications();
+
+    void saveApplication(Application application);
+
+    Application getApplicationById(Long id);
+
+    void deleteApplication(Long id);
 }

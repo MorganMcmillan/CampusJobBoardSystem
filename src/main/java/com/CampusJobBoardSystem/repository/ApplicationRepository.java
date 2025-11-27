@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
-    List<Application> findByStatus(JobStatus status);
+    List<Application> findByStatus(ApplicationStatus status);
     List<Application> findByJob(Job job);
     List<Application> findByJobAndStatus(Job job, ApplicationStatus status);
     List<Application> findByUser(User student);

@@ -1,76 +1,57 @@
 package com.CampusJobBoardSystem.controller;
 
 import com.CampusJobBoardSystem.model.Job;
-import com.CampusJobBoardSystem.model.JobStatus;
-import com.CampusJobBoardSystem.repository.JobRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.CampusJobBoardSystem.service.JobService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
-@RestController
-@RequestMapping("/api/jobs")
+@Controller
+@RequestMapping("/jobs")
 public class JobController {
 
-    @Autowired
-    private JobRepository jobRepository;
+    private final JobService jobService;
 
+    public JobController(JobService jobService) {
+        this.jobService = jobService;
+    }
+
+    // show all jobs
     @GetMapping
-    public List<Job> getAllJobs() {
-        return jobRepository.findAll();
+    public String listJobs(Model model) {
+        model.addAttribute("jobs", jobService.getAllJobs());
+        // service: return all job records
+        return "jobs/list";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Job> getJobById(@PathVariable Long id) {
-        Optional<Job> job = jobRepository.findById(id);
-        return job.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    // show a form to create a job
+    @GetMapping("/new")
+    public String newJobForm(Model model) {
+        model.addAttribute("job", new Job());
+        return "jobs/new";
     }
 
-    @GetMapping("/status/{status}")
-    public List<Job> getJobsByStatus(@PathVariable JobStatus status) {
-        return jobRepository.findByStatus(status);
-    }
-
-    @GetMapping("/category/{category}")
-    public List<Job> getJobsByCategory(@PathVariable String category) {
-        return jobRepository.findByCategory(category);
-    }
-
+    // save job
     @PostMapping
-    public ResponseEntity<Job> createJob(@RequestBody Job job) {
-        Job savedJob = jobRepository.save(job);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedJob);
+    public String saveJob(@ModelAttribute Job job) {
+        jobService.saveJob(job);
+        // service: insert job into database
+        return "redirect:/jobs";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Job> updateJob(@PathVariable Long id, @RequestBody Job jobDetails) {
-        Optional<Job> jobOptional = jobRepository.findById(id);
-        if (jobOptional.isPresent()) {
-            Job job = jobOptional.get();
-            job.setEmployer(jobDetails.getEmployer());
-            job.setTitle(jobDetails.getTitle());
-            job.setDescription(jobDetails.getDescription());
-            job.setSalary(jobDetails.getSalary());
-            job.setLocation(jobDetails.getLocation());
-            job.setCategory(jobDetails.getCategory());
-            job.setDeadline(jobDetails.getDeadline());
-            job.setStatus(jobDetails.getStatus());
-            jobRepository.save(job);
-            return ResponseEntity.ok(job);
-        }
-        return ResponseEntity.notFound().build();
+    // show job details
+    @GetMapping("/{id}")
+    public String viewJob(@PathVariable Long id, Model model) {
+        model.addAttribute("job", jobService.getJobById(id));
+        // service: find job by id or throw error
+        return "jobs/view";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteJob(@PathVariable Long id) {
-        if (jobRepository.existsById(id)) {
-            jobRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    // delete job
+    @PostMapping("/{id}/delete")
+    public String deleteJob(@PathVariable Long id) {
+        jobService.deleteJob(id);
+        // service: delete job by id
+        return "redirect:/jobs";
     }
 }

@@ -43,4 +43,24 @@ public class ApplicationServiceImpl implements ApplicationService {
             throw new InvalidRoleException("Expected user to have role EMPLOYER, got " + employer.getRole() + ".");
         return applicationRepository.findByJobAndStatus(job, ApplicationStatus.SUBMITTED);
     }
+
+    @Override
+    public List<Application> getAllApplications() {
+        return applicationRepository.findAll();
+    }
+
+    @Override
+    public void saveApplication(Application application) {
+        applicationRepository.save(application);
+    }
+
+    @Override
+    public Application getApplicationById(Long id) {
+        return applicationRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void deleteApplication(Long id) {
+        applicationRepository.deleteById(id);
+    }
 }

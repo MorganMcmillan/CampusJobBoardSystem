@@ -17,17 +17,27 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> view() {
+    public List<Job> getAllJobs() {
         return jobRepository.findByStatus(JobStatus.APPROVED);
     }
 
     @Override
-    public List<Job> view(String category) {
+    public List<Job> getByCategory(String category) {
         return jobRepository.findByStatusAndCategory(JobStatus.APPROVED, category);
     }
 
     @Override
-    public void create(Job job) {
+    public void saveJob(Job job) {
         jobRepository.save(job);
+    }
+
+    @Override
+    public Job getJobById(Long id) {
+        return jobRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void deleteJob(Long id) {
+        jobRepository.deleteById(id);
     }
 }

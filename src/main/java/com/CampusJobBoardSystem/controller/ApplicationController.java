@@ -1,58 +1,58 @@
 package com.CampusJobBoardSystem.controller;
 
 import com.CampusJobBoardSystem.model.Application;
-import com.CampusJobBoardSystem.repository.ApplicationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.CampusJobBoardSystem.service.ApplicationService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
-@RestController
-@RequestMapping("/api/applications")
+@Controller
+@RequestMapping("/applications")
 public class ApplicationController {
 
-    @Autowired
-    private ApplicationRepository applicationRepository;
+    private final ApplicationService applicationService;
 
+    public ApplicationController(ApplicationService applicationService) {
+        this.applicationService = applicationService;
+    }
+
+    // list all applications
     @GetMapping
-    public List<Application> getAllApplications() {
-        return applicationRepository.findAll();
+    public String listApplications(Model model) {
+        model.addAttribute("applications", applicationService.getAllApplications());
+        // service: return every application
+        return "applications/list";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Application> getApplicationById(@PathVariable Long id) {
-        Optional<Application> application = applicationRepository.findById(id);
-        return application.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    // show form to apply for a job
+    @GetMapping("/apply/{jobId}")
+    public String applyForm(@PathVariable Long jobId, Model model) {
+        model.addAttribute("application", new Application());
+        model.addAttribute("jobId", jobId);
+        return "applications/new";
     }
 
+    // save an application
     @PostMapping
-    public ResponseEntity<Application> createApplication(@RequestBody Application application) {
-        Application savedApplication = applicationRepository.save(application);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedApplication);
+    public String submitApplication(@ModelAttribute Application application) {
+        applicationService.saveApplication(application);
+        // service: save new application in DB
+        return "redirect:/applications";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Application> updateApplication(@PathVariable Long id, @RequestBody Application applicationDetails) {
-        Optional<Application> applicationOptional = applicationRepository.findById(id);
-        if (applicationOptional.isPresent()) {
-            Application application = applicationOptional.get();
-            application.setJob(applicationDetails.getJob());
-            applicationRepository.save(application);
-            return ResponseEntity.ok(application);
-        }
-        return ResponseEntity.notFound().build();
+    // view application details
+    @GetMapping("/{id}")
+    public String viewApplication(@PathVariable Long id, Model model) {
+        model.addAttribute("application", applicationService.getApplicationById(id));
+        // service: select application by id
+        return "applications/view";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteApplication(@PathVariable Long id) {
-        if (applicationRepository.existsById(id)) {
-            applicationRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    // delete an application
+    @PostMapping("/{id}/delete")
+    public String deleteApplication(@PathVariable Long id) {
+        applicationService.deleteApplication(id);
+        // service: delete this application
+        return "redirect:/applications";
     }
 }
