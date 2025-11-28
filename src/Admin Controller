@@ -1,0 +1,55 @@
+import com.campusjobboard.service.AdminService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {
+
+    private final AdminService adminService;
+
+    public AdminController(AdminService adminService) {
+        this.adminService = adminService;
+    }
+
+    // admin dashboard
+    @GetMapping
+    public String dashboard(Model model) {
+        model.addAttribute("stats", adminService.getDashboardStats());
+        // service: return counts (jobs, users, applications, etc.)
+        return "admin/dashboard";
+    }
+
+    // show all users
+    @GetMapping("/users")
+    public String manageUsers(Model model) {
+        model.addAttribute("users", adminService.getAllUsers());
+        // service: return list of all users
+        return "admin/users";
+    }
+
+    // delete user
+    @PostMapping("/users/{id}/delete")
+    public String deleteUser(@PathVariable Long id) {
+        adminService.deleteUser(id);
+        // service: delete user from DB
+        return "redirect:/admin/users";
+    }
+
+    // show all job posts
+    @GetMapping("/jobs")
+    public String manageJobs(Model model) {
+        model.addAttribute("jobs", adminService.getAllJobs());
+        // service: return all job posts
+        return "admin/jobs";
+    }
+
+    // remove job post
+    @PostMapping("/jobs/{id}/delete")
+    public String deleteJob(@PathVariable Long id) {
+        adminService.deleteJob(id);
+        // service: delete job post
+        return "redirect:/admin/jobs";
+    }
+}
