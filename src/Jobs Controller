@@ -1,0 +1,55 @@
+import com.campusjobboard.model.Job;
+import com.campusjobboard.service.JobService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/jobs")
+public class JobController {
+
+    private final JobService jobService;
+
+    public JobController(JobService jobService) {
+        this.jobService = jobService;
+    }
+
+    // show all jobs
+    @GetMapping
+    public String listJobs(Model model) {
+        model.addAttribute("jobs", jobService.getAllJobs());
+        // service: return all job records
+        return "jobs/list";
+    }
+
+    // show a form to create a job
+    @GetMapping("/new")
+    public String newJobForm(Model model) {
+        model.addAttribute("job", new Job());
+        return "jobs/new";
+    }
+
+    // save job
+    @PostMapping
+    public String saveJob(@ModelAttribute Job job) {
+        jobService.saveJob(job);
+        // service: insert job into database
+        return "redirect:/jobs";
+    }
+
+    // show job details
+    @GetMapping("/{id}")
+    public String viewJob(@PathVariable Long id, Model model) {
+        model.addAttribute("job", jobService.getJobById(id));
+        // service: find job by id or throw error
+        return "jobs/view";
+    }
+
+    // delete job
+    @PostMapping("/{id}/delete")
+    public String deleteJob(@PathVariable Long id) {
+        jobService.deleteJob(id);
+        // service: delete job by id
+        return "redirect:/jobs";
+    }
+}
