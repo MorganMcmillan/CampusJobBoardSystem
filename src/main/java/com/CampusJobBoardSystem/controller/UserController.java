@@ -24,18 +24,33 @@ public class UserController {
         return "users/user-list";
     }
 
-    // Display user creation form
-    @GetMapping("/create")
-    public String showCreateForm(Model model) {
+    // Display user registration form
+    @GetMapping("/register")
+    public String register(Model model) {
         model.addAttribute("user", new User());
-        return "users/user-form";
+        return "users/login";
     }
 
-    // Handle form submit for creating a user
-    @PostMapping("/create")
-    public String createUser(@ModelAttribute User user) {
+    // Display user login form
+    @GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("user", new User());
+        return "users/login";
+    }
+
+    // Handle form submit for registering a user
+    @PostMapping("/register")
+    public String register(@ModelAttribute User user) {
         // Service: save a new user
         userService.createUser(user);
+        return "redirect:/users";
+    }
+
+    // Handle form submit for logging in a user
+    // Give user a JWT for authentication
+    @PostMapping("/login")
+    public String login(@ModelAttribute User user) {
+        // TODO: figure out how JWTs are used
         return "redirect:/users";
     }
 
@@ -44,7 +59,7 @@ public class UserController {
     public String editUser(@PathVariable Long id, Model model) {
         // Service: find user by ID
         model.addAttribute("user", userService.getUserById(id));
-        return "users/user-form";
+        return "users/edit-form";
     }
 
     // Handle form submit for update

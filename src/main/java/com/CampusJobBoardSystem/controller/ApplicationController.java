@@ -36,7 +36,6 @@ public class ApplicationController {
     @PostMapping
     public String submitApplication(@ModelAttribute Application application) {
         applicationService.saveApplication(application);
-        // service: save new application in DB
         return "redirect:/applications";
     }
 
@@ -44,7 +43,6 @@ public class ApplicationController {
     @GetMapping("/{id}")
     public String viewApplication(@PathVariable Long id, Model model) {
         model.addAttribute("application", applicationService.getApplicationById(id));
-        // service: select application by id
         return "applications/view";
     }
 
@@ -52,7 +50,6 @@ public class ApplicationController {
     @PostMapping("/{id}/delete")
     public String deleteApplication(@PathVariable Long id) {
         applicationService.deleteApplication(id);
-        // service: delete this application
         return "redirect:/applications";
     }
 }
