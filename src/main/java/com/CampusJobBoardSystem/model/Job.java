@@ -1,6 +1,10 @@
 package com.CampusJobBoardSystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.Date;
 
@@ -16,13 +20,19 @@ public class Job {
     @JoinColumn(name = "employer_id")
     private User employer;
 
+    @NotEmpty
     private String title;
+    @NotEmpty
     private String description;
+    @Positive
     private double salary;
+    @NotEmpty
     private String location;
+    @NotEmpty
     private String category;
 
     @Temporal(TemporalType.DATE)
+    @Future
     private Date deadline;
 
     @Enumerated(EnumType.STRING)

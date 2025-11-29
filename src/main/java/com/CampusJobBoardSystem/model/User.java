@@ -1,6 +1,8 @@
 package com.CampusJobBoardSystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "users")
@@ -9,9 +11,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty
     private String fullName;
 
     @Column(unique = true)
+    @Email
     private String email;
 
     @Enumerated(EnumType.STRING)
