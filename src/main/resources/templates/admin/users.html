@@ -1,10 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #0077cc;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #eee;
+        }
+        .actions a {
+            margin-right: 10px;
+            color: #0066aa;
+        }
+        .add-user {
+            margin-top: 15px;
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #008800;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
 </head>
+
 <body>
+
+<header>
+    <h1>Users</h1>
+</header>
+
+<nav>
+    <a th:href="@{/dashboard}">Dashboard</a>
+    <a th:href="@{/jobs}">Jobs</a>
+    <a th:href="@{/users}">Users</a>
+</nav>
+
+<section>
+    <h2>User List</h2>
+
+    <a class="add-user" th:href="@{/users/create}">Add New User</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Active</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.fullName}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.role}"></td>
+                <td th:text="${user.active ? 'Yes' : 'No'}"></td>
+
+                <td class="actions">
+                    <a th:href="@{'/users/edit/' + ${user.id}}">Edit</a>
+                    <a th:href="@{'/users/delete/' + ${user.id}}">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
 
 </body>
 </html>
