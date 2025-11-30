@@ -1,10 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>List</title>
+    <title>Lists</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #0077cc;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #eee;
+        }
+        .add-btn {
+            margin-top: 15px;
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #008800;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .actions a {
+            margin-right: 10px;
+            color: #0066aa;
+        }
+    </style>
 </head>
+
 <body>
+
+<header>
+    <h1>Lists</h1>
+</header>
+
+<nav>
+    <a th:href="@{/dashboard}">Dashboard</a>
+    <a th:href="@{/jobs}">Jobs</a>
+    <a th:href="@{/users}">Users</a>
+    <a th:href="@{/lists}">Lists</a>
+</nav>
+
+<section>
+    <h2>All Lists</h2>
+
+    <a class="add-btn" th:href="@{/lists/create}">Add New List</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>List ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Total Items</th>
+                <th>Created By</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="list : ${lists}">
+                <td th:text="${list.id}"></td>
+                <td th:text="${list.title}"></td>
+                <td th:text="${list.description}"></td>
+                <td th:text="${list.itemCount}"></td>
+                <td th:text="${list.createdBy}"></td>
+
+                <td class="actions">
+                    <a th:href="@{'/lists/view/' + ${list.id}}">View</a>
+                    <a th:href="@{'/lists/edit/' + ${list.id}}">Edit</a>
+                    <a th:href="@{'/lists/delete/' + ${list.id}}">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
 
 </body>
 </html>
