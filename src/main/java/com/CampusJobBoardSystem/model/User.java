@@ -2,26 +2,33 @@ package com.CampusJobBoardSystem.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
+    @NotBlank(message = "Full name cannot be empty")
+    @Size(min = 2, max = 50, message = "Full name must be between 2 and 50 characters")
     private String fullName;
 
-    @Column(unique = true)
-    @Email
+    @Column(unique = true, nullable = false)
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Invalid email format")
     private String email;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Role cannot be null")
     private Role role;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "User status cannot be null")
     private UserStatus status;
 
     // Constructors
