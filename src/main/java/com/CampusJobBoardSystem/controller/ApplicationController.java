@@ -1,55 +1,39 @@
-package com.CampusJobBoardSystem.controller;
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Applications</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<h1>All Applications</h1>
 
-import com.CampusJobBoardSystem.model.Application;
-import com.CampusJobBoardSystem.service.ApplicationService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+<a th:href="@{/jobs}">Back to Jobs</a>
 
-@Controller
-@RequestMapping("/applications")
-public class ApplicationController {
-
-    private final ApplicationService applicationService;
-
-    public ApplicationController(ApplicationService applicationService) {
-        this.applicationService = applicationService;
-    }
-
-    // list all applications
-    @GetMapping
-    public String listApplications(Model model) {
-        model.addAttribute("applications", applicationService.getAllApplications());
-        // service: return every application
-        return "applications/list";
-    }
-
-    // show form to apply for a job
-    @GetMapping("/apply/{jobId}")
-    public String applyForm(@PathVariable Long jobId, Model model) {
-        model.addAttribute("application", new Application());
-        model.addAttribute("jobId", jobId);
-        return "applications/new";
-    }
-
-    // save an application
-    @PostMapping
-    public String submitApplication(@ModelAttribute Application application) {
-        applicationService.saveApplication(application);
-        return "redirect:/applications";
-    }
-
-    // view application details
-    @GetMapping("/{id}")
-    public String viewApplication(@PathVariable Long id, Model model) {
-        model.addAttribute("application", applicationService.getApplicationById(id));
-        return "applications/view";
-    }
-
-    // delete an application
-    @PostMapping("/{id}/delete")
-    public String deleteApplication(@PathVariable Long id) {
-        applicationService.deleteApplication(id);
-        return "redirect:/applications";
-    }
-}
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Student</th>
+            <th>Job</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="app : ${applications}">
+            <td th:text="${app.id}">1</td>
+            <td th:text="${app.user.fullName}">Student Name</td>
+            <td th:text="${app.job.title}">Job Title</td>
+            <td th:text="${app.status}">SUBMITTED</td>
+            <td>
+                <a th:href="@{|/applications/${app.id}|}">View</a>
+                <form th:action="@{|/applications/${app.id}/delete|}" method="post" style="display:inline">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>
