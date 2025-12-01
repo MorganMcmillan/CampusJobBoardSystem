@@ -1,16 +1,110 @@
-package com.CampusJobBoardSystem.repository;
+package com.CampusJobBoardSystem.controller;
 
 import com.CampusJobBoardSystem.model.*;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.CampusJobBoardSystem.service.ApplicationService;
+import com.CampusJobBoardSystem.service.JobService;
+import com.CampusJobBoardSystem.service.UserService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Repository
-public interface ApplicationRepository extends JpaRepository<Application, Long> {
-    List<Application> findByStatus(ApplicationStatus status);
-    List<Application> findByJob(Job job);
-    List<Application> findByJobAndStatus(Job job, ApplicationStatus status);
-    List<Application> findByUser(User student);
-    List<Application> findByUserAndStatus(User student, ApplicationStatus status);
+@Controller
+@RequestMapping("/applications")
+public class ApplicationController {
+
+    private final ApplicationService applicationService;
+    private final JobService jobService;
+    private final UserService userService;
+
+    public ApplicationController(ApplicationService applicationService,
+                                 JobService jobService,
+                                 UserService userService) {
+        this.applicationService = applicationService;
+        this.jobService = jobService;
+        this.userService = userService;
+    }
+
+   
+    // PAGE: List all applications
+   
+    @GetMapping
+    public String listApplications(Model model) {
+        List<Application> apps = applicationService.getAllApplications();
+        model.addAttribute("applications", apps);
+        return "applications/list";
+    }
+
+   
+    // PAGE: View a single application
+   
+    @GetMapping("/{id}")
+    public String viewApplication(@PathVariable Long id, Model model) {
+        Application app = applicationService.getApplication(id);
+        model.addAttribute("application", app);
+        return "applications/view";
+    }
+
+   
+    // FILTER: Applications by status
+
+    @GetMapping("/status/{status}")
+    public String applicationsByStatus(@PathVariable ApplicationStatus status, Model model) {
+        List<Application> apps = applicationService.getApplicationsByStatus(status);
+        model.addAttribute("applications", apps);
+        model.addAttribute("status", status);
+        return "applications/list_by_status";
+    }
+
+   
+    // FILTER: Applications for a job
+   
+    @GetMapping("/job/{jobId}")
+    public String applicationsByJob(@PathVariable Long jobId, Model model) {
+        Job job = jobService.getJob(jobId);
+        List<Application> apps = applicationService.getApplicationsByJob(job);
+
+        model.addAttribute("job", job);
+        model.addAttribute("applications", apps);
+        return "applications/list_by_job";
+    }
+
+   
+    // FILTER: Applications by user (student)
+    
+    @GetMapping("/user/{userId}")
+    public String applicationsByUser(@PathVariable Long userId, Model model) {
+        User user = userService.getUser(userId);
+        List<Application> apps = applicationService.getApplicationsByUser(user);
+
+        model.addAttribute("user", user);
+        model.addAttribute("applications", apps);
+        return "applications/list_by_user";
+    }
+
+  
+    // SUBMIT APPLICATION
+
+    @PostMapping("/submit")
+    public String submitApplication(@RequestParam Long jobId,
+                                    @RequestParam Long userId,
+                                    Model model) {
+
+        Application app = applicationService.submitApplication(jobId, userId);
+        model.addAttribute("application", app);
+
+        return "redirect:/applications/" + app.getId();
+    }
+
+   
+    // UPDATE STATUS (Admin / Employer)
+    
+    @PostMapping("/{id}/status")
+    public String updateStatus(@PathVariable Long id,
+                               @RequestParam ApplicationStatus status) {
+
+        applicationService.updateStatus(id, status);
+        return "redirect:/applications/" + id;
+    }
 }
