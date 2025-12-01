@@ -1,29 +1,31 @@
-package com.CampusJobBoardSystem.model;
+package com.CampusJobBoardSystem.controller;
 
-public class AdminStats {
-    public int jobs;
-    public int pendingJobs;
-    public int approvedJobs;
-    public int rejectedJobs;
-    public int users;
-    public int students;
-    public int employers;
-    public int applications;
-    public int submittedApplications;
-    public int acceptedApplications;
-    public int rejectedApplications;
+import com.CampusJobBoardSystem.model.AdminStats;
+import com.CampusJobBoardSystem.service.AdminStatsService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
-    public AdminStats(int pendingJobs, int approvedJobs, int rejectedJobs, int students, int employers, int submittedApplications, int acceptedApplications, int rejectedApplications) {
-        this.pendingJobs = pendingJobs;
-        this.approvedJobs = approvedJobs;
-        this.rejectedJobs = rejectedJobs;
-        this.jobs = pendingJobs + approvedJobs + rejectedJobs;
-        this.students = students;
-        this.employers = employers;
-        this.users = students + employers;
-        this.submittedApplications = submittedApplications;
-        this.acceptedApplications = acceptedApplications;
-        this.rejectedApplications = rejectedApplications;
-        this.applications = submittedApplications + acceptedApplications + rejectedApplications;
+@Controller
+public class AdminStatsController {
+
+    private final AdminStatsService adminStatsService;
+
+    public AdminStatsController(AdminStatsService adminStatsService) {
+        this.adminStatsService = adminStatsService;
+    }
+
+    // Display admin dashboard stats in a Thymeleaf page
+    @GetMapping("/admin/stats")
+    public String getAdminStats(Model model) {
+        AdminStats stats = adminStatsService.getStatistics();
+        model.addAttribute("stats", stats);
+        return "admin/stats";  // Thymeleaf template: src/main/resources/templates/admin/stats.html
+    }
+
+    // Endpoint for API (JSON)
+    @GetMapping("/api/admin/stats")
+    public AdminStats getAdminStatsApi() {
+        return adminStatsService.getStatistics();
     }
 }
