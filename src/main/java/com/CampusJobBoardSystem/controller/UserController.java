@@ -1,88 +1,39 @@
-package com.CampusJobBoardSystem.controller;
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User List</title>
+</head>
+<body>
 
-import com.CampusJobBoardSystem.service.UserService;
-import com.CampusJobBoardSystem.model.User;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+<h1>All Users</h1>
 
-@Controller
-@RequestMapping("/users")
-public class UserController {
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
 
-    private final UserService userService;
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.fullName}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.role}"></td>
+        <td th:text="${user.status}"></td>
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+        <td>
+            <a th:href="@{'/users/' + ${user.id}}">View</a> |
+            <a th:href="@{'/users/edit/' + ${user.id}}">Edit</a> |
+            <a th:href="@{'/users/delete/' + ${user.id}}">Delete</a>
+        </td>
+    </tr>
 
-    // Show all users
-    @GetMapping
-    public String listUsers(Model model) {
-        // Service: return list of all users
-        model.addAttribute("users", userService.getAllUsers());
-        return "users/user-list";
-    }
+</table>
 
-    // Display user registration form
-    @GetMapping("/register")
-    public String register(Model model) {
-        model.addAttribute("user", new User());
-        return "users/login";
-    }
+<a href="/users/register">Register New User</a>
 
-    // Display user login form
-    @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("user", new User());
-        return "users/login";
-    }
-
-    // Handle form submit for registering a user
-    @PostMapping("/register")
-    public String register(@ModelAttribute User user) {
-        // Service: save a new user
-        userService.createUser(user);
-        return "redirect:/users";
-    }
-
-    // Handle form submit for logging in a user
-    // Give user a JWT for authentication
-    @PostMapping("/login")
-    public String login(@ModelAttribute User user) {
-        // TODO: figure out how JWTs are used
-        return "redirect:/users";
-    }
-
-    // Show edit form
-    @GetMapping("/edit/{id}")
-    public String editUser(@PathVariable Long id, Model model) {
-        // Service: find user by ID
-        model.addAttribute("user", userService.getUserById(id));
-        return "users/edit-form";
-    }
-
-    // Handle form submit for update
-    @PostMapping("/edit/{id}")
-    public String updateUser(@PathVariable Long id, @ModelAttribute User user) {
-        // Service: update user data
-        userService.updateUser(id, user);
-        return "redirect:/users";
-    }
-
-    // Delete user
-    @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable Long id) {
-        // Service: delete user by ID
-        userService.deleteUser(id);
-        return "redirect:/users";
-    }
-
-    // Show user profile page
-    @GetMapping("/{id}")
-    public String viewUser(@PathVariable Long id, Model model) {
-        // Service: return detailed profile information
-        model.addAttribute("user", userService.getUserById(id));
-        return "users/user-profile";
-    }
-}
+</body>
+</html>
