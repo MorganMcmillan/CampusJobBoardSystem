@@ -1,48 +1,56 @@
-package com.CampusJobBoardSystem.service;
+package com.CampusJobBoardSystem.controller;
 
-import com.CampusJobBoardSystem.exception.UserExistsException;
-import com.CampusJobBoardSystem.exception.UserNotFoundException;
-import com.CampusJobBoardSystem.model.Role;
 import com.CampusJobBoardSystem.model.User;
-import com.CampusJobBoardSystem.model.UserStatus;
-import com.CampusJobBoardSystem.repository.UserRepository;
-
+import com.CampusJobBoardSystem.service.UserService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 
-public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
+@RestController
+@RequestMapping("/api/users/impl")
+public class UserServiceImplController {
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private final UserService userService;
+
+    public UserServiceImplController(UserService userService) {
+        this.userService = userService;
     }
 
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @Override
-    public User getUserById(long id) {
-        return userRepository.findById(id).orElse(null);
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable long id) {
+        User user = userService.getUserById(id);
+        if (user == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(user);
     }
 
-    @Override
-    public void createUser(User user) {
-        userRepository.save(user);
+    @PostMapping
+    public ResponseEntity<String> createUser(@RequestBody User user) {
+        userService.createUser(user);
+        return ResponseEntity.ok("User created successfully");
     }
 
-    @Override
-    public void updateUser(long id, User user) {
-        if (!userRepository.existsById(id))
-            throw new UserNotFoundException("User by id " + id + " not found.");
-        userRepository.save(user);
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable long id, @RequestBody User user) {
+        try {
+            userService.updateUser(id, user);
+            return ResponseEntity.ok("User updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    @Override
-    public void deleteUser(long id) {
-        if (!userRepository.existsById(id))
-            throw new UserNotFoundException("User by id " + id + " not found.");
-        userRepository.deleteById(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable long id) {
+        try {
+            userService.deleteUser(id);
+            return ResponseEntity.ok("User deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
