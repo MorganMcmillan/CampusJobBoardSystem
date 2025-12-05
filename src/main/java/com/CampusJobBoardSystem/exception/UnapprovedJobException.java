@@ -1,5 +1,4 @@
 package com.CampusJobBoardSystem.service;
-
 import com.CampusJobBoardSystem.exception.JobNotFoundException;
 import com.CampusJobBoardSystem.exception.UnapprovedJobException;
 import com.CampusJobBoardSystem.model.Job;
@@ -15,7 +14,7 @@ public class JobApprovalService {
         this.jobRepository = jobRepository;
     }
 
-    // Fetch job and verify approval
+    // Get a job but only if approved
     public Job getApprovedJob(Long jobId) {
 
         Job job = jobRepository.findById(jobId)
@@ -31,7 +30,7 @@ public class JobApprovalService {
         return job;
     }
 
-    // Approve job (Admin action)
+    // Admin approves job
     public Job approveJob(Long jobId) {
 
         Job job = jobRepository.findById(jobId)
@@ -42,7 +41,7 @@ public class JobApprovalService {
         return jobRepository.save(job);
     }
 
-    // Reject job (Admin action)
+    // Admin rejects job
     public Job rejectJob(Long jobId) {
 
         Job job = jobRepository.findById(jobId)
