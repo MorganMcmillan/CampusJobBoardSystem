@@ -1,15 +1,17 @@
 package com.CampusJobBoardSystem.service;
 
-import com.CampusJobBoardSystem.exception.InvalidRoleException;
 import com.CampusJobBoardSystem.model.Job;
 import com.CampusJobBoardSystem.model.JobStatus;
-import com.CampusJobBoardSystem.model.Role;
-import com.CampusJobBoardSystem.model.User;
 import com.CampusJobBoardSystem.repository.JobRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Service
+@Transactional
 public class JobServiceImpl implements JobService {
+
     private final JobRepository jobRepository;
 
     public JobServiceImpl(JobRepository jobRepository) {
