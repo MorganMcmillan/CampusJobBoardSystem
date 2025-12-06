@@ -1,39 +1,69 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>User List</title>
-</head>
-<body>
+package com.CampusJobBoardSystem.controller;
 
-<h1>All Users</h1>
+import com.CampusJobBoardSystem.model.User;
+import com.CampusJobBoardSystem.service.UserService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Full Name</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
+@Controller
+@RequestMapping("/users")
+public class UserController {
 
-    <tr th:each="user : ${users}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.fullName}"></td>
-        <td th:text="${user.email}"></td>
-        <td th:text="${user.role}"></td>
-        <td th:text="${user.status}"></td>
+    private final UserService userService;
 
-        <td>
-            <a th:href="@{'/users/' + ${user.id}}">View</a> |
-            <a th:href="@{'/users/edit/' + ${user.id}}">Edit</a> |
-            <a th:href="@{'/users/delete/' + ${user.id}}">Delete</a>
-        </td>
-    </tr>
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
-</table>
+    // Display all users (matches your Thymeleaf table)
+    @GetMapping
+    public String listUsers(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "users";   // Thymeleaf page name
+    }
 
-<a href="/users/register">Register New User</a>
+    // View single user by ID
+    @GetMapping("/{id}")
+    public String viewUser(@PathVariable Long id, Model model) {
+        User user = userService.getUserById(id);
+        model.addAttribute("user", user);
+        return "user-view";  // create user-view.html
+    }
 
-</body>
-</html>
+    // Show registration form
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new User());
+        return "user-register"; // create user-register.html
+    }
+
+    // Save new user
+    @PostMapping("/save")
+    public String saveUser(@ModelAttribute("user") User user) {
+        userService.createUser(user);
+        return "redirect:/users";
+    }
+
+    // Show edit form
+    @GetMapping("/edit/{id}")
+    public String editUser(@PathVariable Long id, Model model) {
+        User user = userService.getUserById(id);
+        model.addAttribute("user", user);
+        return "user-edit"; // create user-edit.html
+    }
+
+    // Update user
+    @PostMapping("/update/{id}")
+    public String updateUser(@PathVariable Long id, @ModelAttribute("user") User updatedUser) {
+        userService.updateUser(id, updatedUser);
+        return "redirect:/users";
+    }
+
+    // Delete user
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return "redirect:/users";
+    }
+}
