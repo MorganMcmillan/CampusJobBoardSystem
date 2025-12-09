@@ -1,6 +1,4 @@
 package com.CampusJobBoardSystem.service;
-
-
 import com.CampusJobBoardSystem.exception.InvalidRoleException;
 import com.CampusJobBoardSystem.model.*;
 import com.CampusJobBoardSystem.repository.ApplicationRepository;
