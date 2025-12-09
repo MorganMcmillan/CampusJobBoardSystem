@@ -1,5 +1,4 @@
 package com.CampusJobBoardSystem.controller;
-
 import com.CampusJobBoardSystem.model.Job;
 import com.CampusJobBoardSystem.model.JobStatus;
 import com.CampusJobBoardSystem.service.JobService;
