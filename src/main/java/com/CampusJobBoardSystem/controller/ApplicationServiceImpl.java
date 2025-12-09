@@ -6,8 +6,6 @@ import com.CampusJobBoardSystem.model.*;
 import com.CampusJobBoardSystem.repository.ApplicationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
