@@ -4,9 +4,11 @@ import com.CampusJobBoardSystem.model.*;
 import com.CampusJobBoardSystem.repository.ApplicationRepository;
 import com.CampusJobBoardSystem.repository.JobRepository;
 import com.CampusJobBoardSystem.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class AdminServiceImpl implements AdminService {
     private final JobRepository jobRepository;
     private final UserRepository userRepository;

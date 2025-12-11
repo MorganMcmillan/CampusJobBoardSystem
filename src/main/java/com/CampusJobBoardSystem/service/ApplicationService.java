@@ -2,14 +2,15 @@ package com.CampusJobBoardSystem.service;
 
 import com.CampusJobBoardSystem.model.*;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 public interface ApplicationService {
-    public Application create(Job job, User student);
-    public List<Application> view(User student);
-    public List<Application> view(User student, ApplicationStatus status);
-    public List<Application> view(Job job, User employer);
+    Application create(Job job, User student);
+    List<Application> view(User student);
+    List<Application> view(User student, ApplicationStatus status);
+    List<Application> view(Job job, User employer);
 
     List<Application> getAllApplications();
 

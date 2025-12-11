@@ -27,12 +27,17 @@
         <a th:if="${isAdmin}" class="btn btn-success" th:href="@{/jobs/new}">Add Job</a>
     </div>
 
-    <form class="row g-2 my-3" th:action="@{/jobs}" method="get">
+    <!-- Search Form with Validation -->
+    <form class="row g-2 my-3 needs-validation" th:action="@{/jobs}" method="get" novalidate>
         <div class="col-auto">
-            <input class="form-control" name="q" placeholder="Search jobs..." th:value="${q}">
+            <input class="form-control" name="q" placeholder="Search jobs..." th:value="${q}"
+                   required minlength="2" maxlength="50">
+            <div class="invalid-feedback">
+                Please enter at least 2 characters to search.
+            </div>
         </div>
         <div class="col-auto">
-            <button class="btn btn-primary">Search</button>
+            <button class="btn btn-primary" type="submit">Search</button>
         </div>
     </form>
 
@@ -66,6 +71,24 @@
 <footer class="text-center mt-4 mb-3">
     <small>&copy; <span th:text="${T(java.time.Year).now().value}"></span> CampusBoard</small>
 </footer>
+
+<!-- Bootstrap JS for validation -->
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
 
 </body>
 </html>

@@ -3,13 +3,14 @@ package com.CampusJobBoardSystem.service;
 import com.CampusJobBoardSystem.model.AdminStats;
 import com.CampusJobBoardSystem.model.Job;
 import com.CampusJobBoardSystem.model.User;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 public interface AdminService {
-    public void approve(Job job);
-    public void reject(Job job);
-    public void toggleActivation(User user, boolean activated);
+    void approve(Job job);
+    void reject(Job job);
+    void toggleActivation(User user, boolean activated);
 
     AdminStats getDashboardStats();
 

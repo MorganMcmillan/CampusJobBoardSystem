@@ -2,9 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>New</title>
+    <title>Create New Job</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        form {
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 6px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 14px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
+
+<h1>Create New Job</h1>
+
+<form action="#" method="post">
+    <label>Job Title</label>
+    <input type="text" name="title" placeholder="Enter job title">
+
+    <label>Company</label>
+    <input type="text" name="company" placeholder="Enter company name">
+
+    <label>Location</label>
+    <input type="text" name="location" placeholder="Enter job location">
+
+    <label>Description</label>
+    <textarea name="description" rows="4" placeholder="Enter job details"></textarea>
+
+    <label>Salary</label>
+    <input type="text" name="salary" placeholder="Enter salary">
+
+    <button type="submit">Submit Job</button>
+</form>
 
 </body>
 </html>

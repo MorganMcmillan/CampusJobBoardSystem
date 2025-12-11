@@ -1,6 +1,7 @@
 package com.CampusJobBoardSystem.service;
 
 import com.CampusJobBoardSystem.model.Job;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

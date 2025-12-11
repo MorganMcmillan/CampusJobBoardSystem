@@ -2,6 +2,7 @@ package com.CampusJobBoardSystem.service;
 
 import com.CampusJobBoardSystem.model.Role;
 import com.CampusJobBoardSystem.model.User;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

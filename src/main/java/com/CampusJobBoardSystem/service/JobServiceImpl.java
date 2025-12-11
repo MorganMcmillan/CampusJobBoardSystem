@@ -6,9 +6,11 @@ import com.CampusJobBoardSystem.model.JobStatus;
 import com.CampusJobBoardSystem.model.Role;
 import com.CampusJobBoardSystem.model.User;
 import com.CampusJobBoardSystem.repository.JobRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
 

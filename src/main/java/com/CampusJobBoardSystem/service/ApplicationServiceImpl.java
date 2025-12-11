@@ -3,11 +3,13 @@ package com.CampusJobBoardSystem.service;
 import com.CampusJobBoardSystem.exception.InvalidRoleException;
 import com.CampusJobBoardSystem.model.*;
 import com.CampusJobBoardSystem.repository.ApplicationRepository;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
+@Service
 public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository applicationRepository;
 
@@ -27,14 +29,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     public List<Application> view(User student) {
         if (student.getRole() != Role.STUDENT)
             throw new InvalidRoleException("Expected user with role STUDENT, got" + student.getRole() + ".");
-        return applicationRepository.findByUser(student);
+        return applicationRepository.findByStudent(student);
     }
 
     @Override
     public List<Application> view(User student, ApplicationStatus status) {
         if (student.getRole() != Role.STUDENT)
             throw new InvalidRoleException("Expected user with role STUDENT, got" + student.getRole() + ".");
-        return applicationRepository.findByUserAndStatus(student, status);
+        return applicationRepository.findByStudentAndStatus(student, status);
     }
 
     @Override

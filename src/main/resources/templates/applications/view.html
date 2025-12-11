@@ -1,10 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>View</title>
+    <title>View Item</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 25px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #0077cc;
+        }
+        .container {
+            width: 70%;
+            margin: auto;
+        }
+        .meta {
+            margin-top: 5px;
+            color: #666;
+        }
+        .actions a {
+            margin-right: 12px;
+            color: #0066aa;
+        }
+        .box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 6px;
+        }
+    </style>
 </head>
 <body>
+
+<header>
+    <h1>View Item</h1>
+</header>
+
+<nav>
+    <a th:href="@{/dashboard}">Dashboard</a>
+    <a th:href="@{/jobs}">Jobs</a>
+    <a th:href="@{/users}">Users</a>
+    <a th:href="@{/lists}">Lists</a>
+</nav>
+
+<div class="container">
+
+    <h2 th:text="${item.title}">Item Title</h2>
+    <div class="meta" th:text="${item.meta}">Item Meta</div>
+
+    <div class="actions">
+        <a th:href="@{'/items/edit/' + ${item.id}}">Edit</a>
+        <a th:href="@{'/items/delete/' + ${item.id}}">Delete</a>
+        <a th:href="@{/items}">Back</a>
+    </div>
+
+    <div class="box">
+        <h3>Description</h3>
+        <p th:text="${item.description}">Item description here.</p>
+    </div>
+
+</div>
 
 </body>
 </html>
