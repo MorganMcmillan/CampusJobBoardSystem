@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card {
+            flex: 1 1 200px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+            background: #f9f9f9;
+        }
+        .card a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Admin Dashboard</h1>
+
+<div class="dashboard">
+    <div class="card">
+        <h2>Manage Users</h2>
+        <p>Add, edit or delete users</p>
+        <a href="#">Go</a>
+    </div>
+
+    <div class="card">
+        <h2>Manage Jobs</h2>
+        <p>Add, edit or delete job posts</p>
+        <a href="#">Go</a>
+    </div>
+
+    <div class="card">
+        <h2>Manage Lists</h2>
+        <p>View and update lists</p>
+        <a href="#">Go</a>
+    </div>
+
+    <div class="card">
+        <h2>Reports</h2>
+        <p>View system reports</p>
+        <a href="#">Go</a>
+    </div>
+
+</div>
+
+</body>
+</html>
