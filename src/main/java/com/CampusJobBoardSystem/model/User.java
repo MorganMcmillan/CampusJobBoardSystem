@@ -18,6 +18,8 @@ public class User {
     @Email
     private String email;
 
+    private String password;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -27,9 +29,10 @@ public class User {
     // Constructors
     public User() {}
 
-    public User(String fullName, String email, Role role, UserStatus status) {
+    public User(String fullName, String email, String password, Role role, UserStatus status) {
         this.fullName = fullName;
         this.email = email;
+        this.password = password;
         this.role = role;
         this.status = status;
     }
@@ -73,5 +76,13 @@ public class User {
 
     public void setStatus(UserStatus status) {
         this.status = status;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
