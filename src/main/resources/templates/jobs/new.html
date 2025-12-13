@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Create New Job</title>
@@ -12,7 +12,7 @@
             margin-bottom: 20px;
         }
         form {
-            max-width: 400px;
+            max-width: 600px;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 6px;
@@ -22,10 +22,11 @@
             margin-top: 15px;
             font-weight: bold;
         }
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             padding: 8px;
             margin-top: 6px;
+            box-sizing: border-box;
         }
         button {
             margin-top: 20px;
@@ -34,6 +35,19 @@
             color: white;
             border: none;
             border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
         }
     </style>
 </head>
@@ -41,24 +55,43 @@
 
 <h1>Create New Job</h1>
 
-<form action="#" method="post">
-    <label>Job Title</label>
-    <input type="text" name="title" placeholder="Enter job title">
+<form th:action="@{/jobs}" th:object="${job}" method="post">
+    <label for="title">Job Title *</label>
+    <input type="text" id="title" th:field="*{title}" placeholder="Enter job title" required>
+    <span class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
 
-    <label>Company</label>
-    <input type="text" name="company" placeholder="Enter company name">
+    <label for="description">Job Description *</label>
+    <textarea id="description" th:field="*{description}" rows="5" placeholder="Enter detailed job description" required></textarea>
+    <span class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
 
-    <label>Location</label>
-    <input type="text" name="location" placeholder="Enter job location">
+    <label for="category">Category *</label>
+    <select id="category" th:field="*{category}" required>
+        <option value="">Select a category</option>
+        <option value="Technology">Technology</option>
+        <option value="Food Service">Food Service</option>
+        <option value="Education">Education</option>
+        <option value="Marketing">Marketing</option>
+        <option value="Administration">Administration</option>
+        <option value="Other">Other</option>
+    </select>
+    <span class="error" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
 
-    <label>Description</label>
-    <textarea name="description" rows="4" placeholder="Enter job details"></textarea>
+    <label for="location">Location *</label>
+    <input type="text" id="location" th:field="*{location}" placeholder="Enter job location (e.g., Campus Center, Remote)" required>
+    <span class="error" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></span>
 
-    <label>Salary</label>
-    <input type="text" name="salary" placeholder="Enter salary">
+    <label for="salary">Salary ($ per hour) *</label>
+    <input type="number" id="salary" th:field="*{salary}" step="0.01" min="0" placeholder="Enter hourly salary" required>
+    <span class="error" th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}"></span>
 
-    <button type="submit">Submit Job</button>
+    <label for="deadline">Application Deadline</label>
+    <input type="date" id="deadline" th:field="*{deadline}">
+    <span class="error" th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}"></span>
+
+    <button type="submit">Create Job Posting</button>
 </form>
+
+<a href="/jobs" class="back-link">← Back to Job Listings</a>
 
 </body>
 </html>

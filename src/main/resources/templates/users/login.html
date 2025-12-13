@@ -1,80 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Login - Campus Job Board</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: #f4f4f4;
+            background: #f4f7f6;
             margin: 0;
         }
         .login-box {
             background: white;
-            padding: 30px;
+            padding: 40px;
             border-radius: 8px;
-            width: 300px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 350px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         h2 {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+        .form-group {
+            margin-bottom: 20px;
         }
         label {
-            font-weight: bold;
             display: block;
-            margin-top: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
         }
         input {
             width: 100%;
-            padding: 8px;
-            margin-top: 6px;
-            border: 1px solid #ccc;
+            padding: 10px;
+            border: 1px solid #ddd;
             border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        input:focus {
+            border-color: #3498db;
+            outline: none;
         }
         button {
             width: 100%;
-            padding: 10px;
-            margin-top: 25px;
-            background: #007bff;
+            padding: 12px;
+            margin-top: 10px;
+            background: #3498db;
             color: white;
             border: none;
             border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #2980b9;
         }
         .links {
             text-align: center;
-            margin-top: 15px;
+            margin-top: 20px;
+            font-size: 0.9em;
         }
         .links a {
             text-decoration: none;
-            color: #007bff;
+            color: #3498db;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
 <div class="login-box">
-    <h2>Login</h2>
+    <h2>Welcome Back</h2>
 
-    <form action="#" method="post">
-        <label>Email</label>
-        <input type="email" name="email" placeholder="Enter your email">
+    <div th:if="${successMessage}" class="alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert-danger" th:text="${errorMessage}"></div>
+    <div th:if="${param.error}" class="alert-danger">Invalid email or password.</div>
+    <div th:if="${param.logout}" class="alert-success">You have been logged out.</div>
 
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Enter password">
+    <form th:action="@{/perform_login}" method="post">
+        <div class="form-group">
+            <label for="username">Email</label>
+            <input type="text" id="username" name="username" placeholder="Enter your email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
 
         <button type="submit">Login</button>
     </form>
 
     <div class="links">
-        <a href="#">Forgot Password?</a><br>
-        <a href="#">Create an Account</a>
+        Don't have an account? <a href="/users/register">Register here</a>
     </div>
 </div>
 
 </body>
 </html>
+

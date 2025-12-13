@@ -1,75 +1,176 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Jobs List</title>
+    <title>Jobs List - Campus Job Board</title>
     <style>
         body { 
-            font-family: Arial, sans-serif; 
-            margin: 20px; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
         }
         h1 { 
-            margin-bottom: 20px; 
+            margin-bottom: 30px;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .actions {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         table { 
             width: 100%; 
-            border-collapse: collapse; 
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
         }
         th, td { 
-            border: 1px solid #ccc; 
-            padding: 10px; 
-            text-align: left; 
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
         }
         th { 
-            background-color: #f2f2f2; 
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+        tr:hover {
+            background-color: #fcfcfc;
         }
         .btn { 
-            padding: 8px 12px; 
-            background: #007bff; 
-            color: white; 
+            display: inline-block;
+            padding: 8px 16px;
+            background: #3498db;
+            color: white;
             text-decoration: none; 
             border-radius: 4px; 
+            font-size: 0.9em;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
         }
+        .btn:hover {
+            background: #2980b9;
+        }
+        .btn-danger {
+            background: #e74c3c;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.8em;
+            margin-right: 5px;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+            background: #eee;
+            color: #555;
+        }
+        .badge-tech { background: #e3f2fd; color: #0d47a1; }
+        .badge-food { background: #fff3e0; color: #e65100; }
     </style>
 </head>
 <body>
-    <h1>Jobs List</h1>
-    <a class="btn" href="#">Post New Job</a>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Job Title</th>
-                <th>Company</th>
-                <th>Location</th>
-                <th>Date Posted</th>
-                <th>View</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Software Developer</td>
-                <td>TechCorp</td>
-                <td>Calgary</td>
-                <td>2025-11-30</td>
-                <td><a href="#">View</a></td>
-                <td><a href="#">Edit</a></td>
-                <td><a href="#">Delete</a></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Network Technician</td>
-                <td>NetWorks</td>
-                <td>Edmonton</td>
-                <td>2025-11-28</td>
-                <td><a href="#">View</a></td>
-                <td><a href="#">Edit</a></td>
-                <td><a href="#">Delete</a></td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="container">
+        <div class="actions">
+            <h1>Jobs List</h1>
+            <div sec:authorize="isAuthenticated()">
+                <span>Welcome, <span sec:authentication="name">User</span>!</span>
+                <a href="/logout" class="btn btn-sm" style="background: #7f8c8d;">Logout</a>
+            </div>
+            <div sec:authorize="!isAuthenticated()">
+                <a href="/users/login" class="btn">Login</a>
+                <a href="/users/register" class="btn" style="background: #2ecc71;">Register</a>
+            </div>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <div class="actions">
+            <a sec:authorize="hasRole('EMPLOYER')" class="btn" href="/jobs/new">Post New Job</a>
+
+            <form action="/jobs" method="get" style="display: flex; gap: 10px;">
+                <input type="text" name="keyword" placeholder="Search jobs..." th:value="${keyword}"
+                       style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 250px;">
+                <button type="submit" class="btn" style="background: #7f8c8d;">Search</button>
+                <a th:if="${keyword}" href="/jobs" class="btn" style="background: #95a5a6;">Clear</a>
+            </form>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Location</th>
+                    <th>Category</th>
+                    <th>Deadline</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="job : ${jobs}">
+                    <td style="font-weight: bold; color: #2c3e50;" th:text="${job.title}">Software Developer</td>
+                    <td th:text="${job.employer != null ? job.employer.fullName : 'Unknown'}">TechCorp</td>
+                    <td th:text="${job.location}">Calgary</td>
+                    <td><span class="badge" th:text="${job.category}">Technology</span></td>
+                    <td th:text="${job.deadline}">2025-11-30</td>
+                    <td>
+                        <a class="btn btn-sm" th:href="@{/jobs/{id}(id=${job.id})}">View</a>
+
+                        <!-- Edit/Delete only for Admin or Creator -->
+                        <span sec:authorize="isAuthenticated()"
+                              th:if="${#authorization.expression('hasRole(''ADMIN'')') or (job.employer != null and #authentication.name == job.employer.email)}">
+                            <a class="btn btn-sm" style="background: #f39c12;" th:href="@{/jobs/{id}/edit(id=${job.id})}">Edit</a>
+                            <a class="btn btn-sm btn-danger" th:href="@{/jobs/{id}/delete(id=${job.id})}"
+                               onclick="return confirm('Are you sure you want to delete this job?');">Delete</a>
+                        </span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(jobs)}">
+                    <td colspan="6" style="text-align: center; padding: 30px; color: #7f8c8d;">
+                        No jobs found. Be the first to post one!
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

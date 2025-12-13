@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>CampusBoard Jobs</title>
@@ -11,12 +12,14 @@
 <nav class="navbar bg-light px-3">
     <a class="navbar-brand" th:href="@{/}">CampusBoard</a>
     <div>
-        <a th:if="${#request.remoteUser == null}" class="btn btn-primary btn-sm" th:href="@{/login}">Login</a>
+<!--        <a th:if="{#request.remoteUser == null}" class="btn btn-primary btn-sm" th:href="@{/login}">Login</a>-->
+        <a class="btn btn-primary btn-sm" th:href="@{/users/login}">Login</a>
+        <a class="btn btn-primary btn-sm" th:href="@{/users/register}">Register</a>
 
-        <span th:if="${#request.remoteUser != null}">
-            <strong th:text="${#request.remoteUser}"></strong>
-            <a class="btn btn-outline-secondary btn-sm ms-2" th:href="@{/logout}">Logout</a>
-        </span>
+<!--        <span th:if="${#request.remoteUser != null}">-->
+<!--            <strong th:text="${#request.remoteUser}"></strong>-->
+<!--            <a class="btn btn-outline-secondary btn-sm ms-2" th:href="@{/logout}">Logout</a>-->
+<!--        </span>-->
     </div>
 </nav>
 
@@ -47,12 +50,12 @@
 
     <div th:each="job : ${jobs}" class="card p-3 mb-3">
         <h5 th:text="${job.title}">Job Title</h5>
-        <p class="mb-1" th:text="${job.company}">Company</p>
+        <p class="mb-1" th:text="${job.employer?.fullName}">Company</p>
         <small th:text="${job.location}">Location</small>
 
         <div class="mt-2">
             <a class="btn btn-sm btn-outline-primary" th:href="@{|/jobs/${job.id}|}">View</a>
-            <a class="btn btn-sm btn-outline-secondary" th:if="${#request.remoteUser != null}"
+            <a class="btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
                th:href="@{|/jobs/${job.id}/apply|}">Apply</a>
             <a class="btn btn-sm btn-danger" th:if="${isAdmin}" th:href="@{|/jobs/${job.id}/delete|}">Delete</a>
         </div>
